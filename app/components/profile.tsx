@@ -1,4 +1,7 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 
 const profile = () => {
    const [apiStatus, setApiStatus] = useState("Loading...");
