@@ -3,37 +3,27 @@ import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Project from "../Components/Project";
 
 const page = () => {
    const [apiStatus, setApiStatus] = useState("Loading...");
-   const [user, setUser] = useState<string>();
-   interface User {
+   const [projName, setProjName] = useState<string>();
+   const [projDescription, setProjDescription] = useState<string>();
+   const [projPrice, setProjPrice] = useState<string>();
+   interface Project {
       _id: string;
       name: string;
+      description: string;
       price: number;
    }
-
-   const [users, setUsers] = useState<User[]>();
-   useEffect(() => {
-      if (apiStatus === "Loading...") {
-         try {
-            const fetchData = async () => {
-               const response = await axios.get("http://localhost:3000/api/status");
-               setApiStatus(response.data.message);
-            };
-            fetchData();
-         } catch (error) {
-            setApiStatus("Error: " + error);
-         }
-      }
-   }),
-      [apiStatus];
+   const [projects, setProjects] = useState<Project[]>();
 
    const handleSubmit = async () => {
       try {
-         const response = await axios.post("http://localhost:3000/api/add-data", {
-            name: user,
-            price: 100,
+         const response = await axios.post("http://localhost:3000/api/add-project", {
+            name: projName,
+            description: projDescription,
+            price: projPrice,
          });
          setApiStatus(response.data.message);
       } catch (error) {
@@ -42,32 +32,55 @@ const page = () => {
    };
 
    useEffect(() => {
-      if (!users) {
+      if (!projects) {
          try {
             const fetchData = async () => {
-               const response = await axios.get("http://localhost:3000/api/get-users");
-               setUsers(response.data.data);
+               const response = await axios.get("http://localhost:3000/api/get-projects");
+               setProjects(response.data.data);
             };
             fetchData();
          } catch (error) {
             setApiStatus("Error: " + error);
          }
       }
-   }, [users]);
+   }, [projects]);
    return (
-      <div>
+      <div className="w-1/2 ">
          <Link href={"/api/auth/login"}>Login</Link>
-         <p>{apiStatus}</p>
-         <input placeholder="Username" type="text" onChange={(e) => setUser(e.target.value)} />
-         <button onClick={handleSubmit}>Submit</button>
+
+         <div className="flex flex-col w-full px-6 py-4 shadow-lg rounded-2xl">
+            <input
+               placeholder="Project Name"
+               type="text"
+               onChange={(e) => setProjName(e.target.value)}
+            />
+            <input
+               placeholder="Project Description"
+               type="text"
+               onChange={(e) => setProjDescription(e.target.value)}
+            />
+            <input
+               placeholder="Project Price"
+               type="text"
+               onChange={(e) => setProjPrice(e.target.value)}
+            />
+            <button onClick={handleSubmit}>Submit</button>
+         </div>
 
          <div>
-            <h1>Users</h1>
-            <ul>
-               {users?.map((u) => (
-                  <li key={u._id}>{u.name}</li>
+            <h1>Projects</h1>
+
+            <div className="flex flex-wrap">
+               {projects?.map((p) => (
+                  <Project
+                     key={p._id}
+                     _id={p._id}
+                     name={p.name}
+                     description={p.description}
+                     price={p.price}
+                  />
                ))}
-            </ul>
+            </div>
          </div>
       </div>
    );
