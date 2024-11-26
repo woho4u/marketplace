@@ -8,7 +8,7 @@ export async function middleware(req) {
       const user = session.user;
 
       // Call your API to sync the user
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/add-user`, {
+      await fetch(`http://localhost:3000/api/add-user`, {
          method: "POST",
          headers: { "Content-Type": "application/json" },
          body: JSON.stringify({
