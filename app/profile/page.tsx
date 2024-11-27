@@ -12,7 +12,7 @@ const page = () => {
    const [projPrice, setProjPrice] = useState<string>();
    interface Project {
       _id: string;
-      name: string;
+      title: string;
       description: string;
       price: number;
    }
@@ -21,9 +21,10 @@ const page = () => {
    const handleSubmit = async () => {
       try {
          const response = await axios.post("http://localhost:3000/api/add-project", {
-            name: projName,
+            title: projName,
             description: projDescription,
             price: projPrice,
+            category: "Web Development",
          });
          setApiStatus(response.data.message);
       } catch (error) {
@@ -75,7 +76,7 @@ const page = () => {
                   <Project
                      key={p._id}
                      _id={p._id}
-                     name={p.name}
+                     title={p.title}
                      description={p.description}
                      price={p.price}
                   />
